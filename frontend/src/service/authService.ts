@@ -10,6 +10,11 @@ interface LoginResponse {
   refreshToken: string;
 }
 
+interface RegisterResponse {
+  status: boolean;
+  message: string;
+}
+
 const loginService = async (
   email: string,
   password: string
@@ -34,5 +39,31 @@ const loginService = async (
     }
   }
 };
+const registerService = async (
+  name: string,
+  email: string,
+  password: string
+): Promise<RegisterResponse | null> => {
+  try {
+    const response = await axios.post(BaseUrl.register, {
+      name: name,
+      email: email,
+      password: password,
+    });
 
-export default loginService;
+    if (response) {
+      return response.data as RegisterResponse;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return error.response.data;
+    } else {
+      console.error("Unexpected error:", error);
+      return null;
+    }
+  }
+};
+
+export { loginService, registerService };

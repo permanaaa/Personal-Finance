@@ -117,7 +117,7 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen px-6 mt-10">
+    <div className="min-h-screen px-6 my-10">
       <div className="flex flex-col gap-4">
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <div className="flex flex-row gap-4 justify-between">

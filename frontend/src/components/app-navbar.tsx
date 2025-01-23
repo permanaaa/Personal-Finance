@@ -12,7 +12,11 @@ import {
   NotificationInterface,
 } from "@/service/dashboardService";
 
+import dotenv from "dotenv";
+
 export default function AppNavbar() {
+  dotenv.config();
+  
   const [, setNotifications] = useState<string[]>([]);
   // const [socketId, setSocketId] = useState<string | null>(null);
   const [notificationsData, setNotificationsData] = useState<
