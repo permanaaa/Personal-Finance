@@ -1,9 +1,9 @@
 const logger = require('../libs/winston');
 
 const logRequest = (req, res, next) => {
-    // if (req.url.startsWith('/auth')) {
-    //     return next();
-    // }
+    if (req.url.startsWith('/auth')) {
+        return next();
+    }
 
     const method = req.method;
     const url = req.url;

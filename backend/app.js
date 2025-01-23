@@ -12,13 +12,23 @@ const swaggerUi = require('swagger-ui-express');
 const cookieParser = require('cookie-parser');
 const { init } = require('./libs/socketIo')
 const { notificationWorker } =require('./jobs/notificationWorker')
-const DashboardRoutes = require("./routes/dashboardRoutes");
+const client = require('prom-client');
 
 dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 const port = process.env.PORT || 3000;
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
+const httpRequestTotal = new client.Counter({
+    name: 'http_requests_total',
+    help: 'Total number of HTTP requests',
+    labelNames: ['method', 'route', 'code'],
+    registers: [register],
+});
+
 const corsOptions = {
     origin: ['http://localhost:3000','http://192.168.1.146:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -53,6 +63,20 @@ app.use(helmet());
 app.use(compression());
 app.use(logRequest);
 app.use(cookieParser());
+app.use((req, res, next) => {
+    const start = Date.now();
+
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        httpRequestTotal.inc({
+            method: req.method,
+            route: req.originalUrl,
+            code: res.statusCode,
+        });
+    });
+
+    next();
+});
 
 app.use('/auth', IndexRoutes.AuthRoutes);
 app.use('/allocation', IndexRoutes.AllocationRoutes);
@@ -66,6 +90,10 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
 
 server.listen(port, '0.0.0.0',() => {
    console.log(`Server running on port ${port}`);
