@@ -16,12 +16,15 @@ import { setCookie } from "@/hooks/useCookie";
 import { loginService, registerService } from "@/service/authService";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+
 export default function Page() {
   const [name, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [, setMessage] = useState("");
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleResetForm = () => {
     setUsername("");
@@ -31,16 +34,19 @@ export default function Page() {
 
   const handleLogin = async () => {
     const response = await loginService(email, password);
-    if (response) {
+
+    if (response?.status) {
+
       setMessage(response.message);
       setCookie("accessToken", response.accessToken);
       setCookie("refreshToken", response.refreshToken, { expires: 7 });
       setCookie("roomId", response.roomId);
-      window.location.href = "/dashboard";
+
+      await router.push("/dashboard");
     } else {
       toast({
         title: "Error",
-        description: "Login failed. Please check your credentials.",
+        description: response?.message,
         variant: "destructive",
       });
 

@@ -25,11 +25,7 @@ const loginService = async (
       password: password,
     });
 
-    if (response.status === 200) {
-      return response.data as LoginResponse;
-    } else {
-      return null;
-    }
+    return response.data as LoginResponse;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
