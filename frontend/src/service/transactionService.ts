@@ -73,7 +73,7 @@ const postTransactions = async (
       date,
     });
     return response.data as postTransaction;
-  } catch (error: any) {
+  } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     } else {

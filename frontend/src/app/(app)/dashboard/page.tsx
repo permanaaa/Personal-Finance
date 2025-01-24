@@ -26,16 +26,6 @@ import {
 //     icon: React.ReactNode;
 // }
 
-
-const chartData = [
-  { month: "January", income: 6000000, expense: 4500000 },
-  { month: "February", income: 5500000, expense: 4000000 },
-  { month: "March", income: 5200000, expense: 3800000 },
-  { month: "April", income: 5800000, expense: 4200000 },
-  { month: "May", income: 6200000, expense: 4400000 },
-  { month: "June", income: 6500000, expense: 4600000 },
-];
-
 const chartConfig = {
   income: {
     label: "Income",
@@ -46,51 +36,6 @@ const chartConfig = {
     color: "#60a5fa",
   },
 } satisfies ChartConfig;
-
-const LastTransactionsData = [
-  {
-    id: 1,
-    date: "12 Des 2022",
-    description: "Beli Ayam Goreng",
-    allocation: "Makanan",
-    amount: 10000,
-  },
-  {
-    id: 2,
-    date: "15 Jan 2023",
-    description: "Bayar Listrik",
-    allocation: "Tagihan",
-    amount: 50000,
-  },
-  {
-    id: 3,
-    date: "20 Jan 2023",
-    description: "Beli Buku",
-    allocation: "Pendidikan",
-    amount: 15000,
-  },
-  {
-    id: 4,
-    date: "25 Jan 2023",
-    description: "Makan Siang di Restoran",
-    allocation: "Makanan",
-    amount: 75000,
-  },
-  {
-    id: 5,
-    date: "30 Jan 2023",
-    description: "Beli Pulsa",
-    allocation: "Telekomunikasi",
-    amount: 50000,
-  },
-  {
-    id: 6,
-    date: "30 Jan 2023",
-    description: "Beli Pulsa",
-    allocation: "Telekomunikasi",
-    amount: 50000,
-  },
-];
 
 export default function Page() {
   const [cardData, setCardData] = useState<CardData[]>([]);
@@ -133,7 +78,7 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <h1 className="text-xl font-bold">
-                  {item.value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                  {item.value.toLocaleString()}
                 </h1>
                 {item.percentage != null && (
                   <p className="text-sm">{item.percentage}% from last month</p>
